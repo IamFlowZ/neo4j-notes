@@ -3,6 +3,7 @@
 ## Table of Contents
 1. [Cypher](#cypher)
 2. [Querying](#querying)
+3. [Creation](#creation)
 
 ## Cypher
 * Uses ascii art to describe intent to the database
@@ -48,5 +49,4 @@
 	* "count(*)" returns the number of rows a pattern resolves to
 	* "count(a)" returns the number of non-null instances of an expression
 
-
-
+## Creation

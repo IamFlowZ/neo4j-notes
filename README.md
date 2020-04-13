@@ -1,9 +1,12 @@
 # My Notes from Neo4j Graph Academy
 [_Neo4j Reference Card_](https://neo4j.com/docs/cypher-refcard/current/)
 ## Table of Contents
-1. [Cypher](#cypher)`
+1. [Cypher](#cypher)
 2. [Querying](#querying)
-3. [Creation](#creating)
+3. [Creation](#creating--updating)
+4. [Parameters](#parameters)
+5. [Analysis](#analysis)
+6. [Constraints](#constraints)
 
 ## Cypher
 * Uses ascii art to describe intent to the database
@@ -20,6 +23,7 @@
 * Use "MATCH" to search for a pattern
 * RETURN to return patterns or properties
 * ```MATCH (a:Person{name:"John"}) - [:FOLLOWS] -> (b) RETURN a.name, a.height```
+
 ## Querying
 * Use "WHERE" to filter results
 	* ``` WHERE a.age >= 22 ```
@@ -68,3 +72,35 @@
 * Use "ON CREATE " to modify new nodes while merging.
 * Use "ON MATCH " to modify already existing nodes.
 * When using merge to create relationships, you must first match the nodes to be related, otherwise the nodes are created.
+
+## Parameters
+* In production, you should never use hard coded values. You should have the statement hard-coded and pass values in as parameters.
+* Use "$" followed by a name to parameterize values
+	* ```set a.name = $personName```
+* Use ":params" directive in the neo4j GUI to set parameters
+	* ``` :params {personName: "Scott"}```
+	* View the currently set parameters with ``` :params```
+	* remove a value by resubmitting the params object without that key/value
+	* Clear the parameters object by passing an empty object ``` :params {} ```
+
+## Analysis
+* Two main commands to analyze query execution
+	* "EXPLAIN" - estimates the amount of processing that might occur
+	* "PROFILE" - provides information about how the engine behaved during the query and executes the query
+* Neo4j keeps a cache of common nodes & relationships, the more specific you are with the nodes you're looking for, the more likely that it will hit the cache. Using "PROFILE" to monitor cache vs DB hits can be a easy way to improve query performance.
+* If a query is executed and returns a lot of data, there is no way to monitor or kill it while it's returning. This can have significant performance costs.
+* If a query is long-running but hasn't returned, you can monitor it with ``` :queries ```
+* You can then kill it with ``` CALL dbms.killQuery('query-id')``` or by clicking in the GUI
+
+## Constraints
+* Easy way to prevent duplication is through constraints
+* Mainly used to guarantee uniqueness
+* If any nodes/relationships fail to meet the constraint when the constraint is being created, the constraint will not be created.
+* Unique property for a given label
+	* ``` CREATE CONSTRAINT on (a:Person) ASSERT a.name is UNIQUE```
+* Ensure a property exists
+	* ``` CREATE CONSTRAINT on ()-[a:CREATED]-() ASSERT exists(a.date) ```
+* Remove constraints with "DROP"
+	* ``` DROP CONSTRAINT on ()-[a:CREATED]-() ASSERT exists(a.date) ```
+* Use Node Keys to define multiple unique properties for a node label. Internally is used as a composite index for the label
+	* ``` CREATE CONSTRAINT on (a:Person) ASSERT (a.name, a.born) IS NODE KEY ```

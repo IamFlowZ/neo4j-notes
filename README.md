@@ -7,6 +7,7 @@
 4. [Parameters](#parameters)
 5. [Analysis](#analysis)
 6. [Constraints](#constraints)
+7. [Indexes](#indexes)
 
 ## Cypher
 * Uses ascii art to describe intent to the database
@@ -104,3 +105,28 @@
 	* ``` DROP CONSTRAINT on ()-[a:CREATED]-() ASSERT exists(a.date) ```
 * Use Node Keys to define multiple unique properties for a node label. Internally is used as a composite index for the label
 	* ``` CREATE CONSTRAINT on (a:Person) ASSERT (a.name, a.born) IS NODE KEY ```
+
+## Indexes
+* Indexes improve read speed at the cost of write-speed and storage size. Indices store redundant data.
+* Unlike SQL, no primary keys. Can have multiple required, unique properties 
+* Single property indices are used for:
+	* Equality checks "="
+	* Range comparisons ">, <, <=, >="
+	* List membership "IN"
+	* String comparisons "STARTS WITH, ENDS WITH, CONTAINS"
+	* Existence checks "exists()"
+	* Spatial distance searches "distance()"
+	* Spatial bounding searches "point()"
+* Composite indices are used for: 
+	* Equality checks
+	* List membership
+* For large graphs, it is recommended to create indices AFTER data is loaded.
+* Uniqueness constraints == indices, indices != uniqueness constraints
+* Use "CREATE INDEX" to create indices for labels
+	* ``` CREATE INDEX ON :Movie(released) ```
+* Create composite indices by listing properties in the query
+	* ``` CREATE INDEX ON :Movie(released, format) ```
+	* This creates a second combined index. This and the previous index would both exist.
+* List indices with ``` CALL db.indexes() ```
+* Delete indices with "DROP INDEX"
+	* ``` DROP INDEX ON :Movie(released, format) ```

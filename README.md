@@ -8,6 +8,7 @@
 5. [Analysis](#analysis)
 6. [Constraints](#constraints)
 7. [Indexes](#indexes)
+8. [Importing](#importing)
 
 ## Cypher
 * Uses ascii art to describe intent to the database
@@ -130,3 +131,12 @@
 * List indices with ``` CALL db.indexes() ```
 * Delete indices with "DROP INDEX"
 	* ``` DROP INDEX ON :Movie(released, format) ```
+
+## Importing
+* The most common way to import data into Neo4j is via _.csv_ files.
+* Use "LOAD CSV" to pull normalized csv data into Neo4j
+	* parses a file in the import directory of the Neo4j installation
+	* ``` LOAD CSV WITH HEADERS FROM url-value AS row ```
+	* You can specify the csv delimiter with "FIELDTERMINATOR"
+		* ``` FIELDTERMINATOR ';' ```
+* If you're importing >10k lines you should use "PERIODIC COMMIT" to avoid mishaps or performance hits.

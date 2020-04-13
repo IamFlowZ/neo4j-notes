@@ -1,9 +1,9 @@
 # My Notes from Neo4j Graph Academy
 [_Neo4j Reference Card_](https://neo4j.com/docs/cypher-refcard/current/)
 ## Table of Contents
-1. [Cypher](#cypher)
+1. [Cypher](#cypher)`
 2. [Querying](#querying)
-3. [Creation](#creation)
+3. [Creation](#creating)
 
 ## Cypher
 * Uses ascii art to describe intent to the database
@@ -49,4 +49,22 @@
 	* "count(*)" returns the number of rows a pattern resolves to
 	* "count(a)" returns the number of non-null instances of an expression
 
-## Creation
+## Creating & Updating
+* Use "CREATE" followed by a pattern to store new information in the database
+* If creating patterns where nodes already exist, "MATCH" them first, then fill in the blanks
+	* ``` MATCH (a:Person{name:"Tom"}), (b:Person{name:"Ken}) CREATE (a) - [:KNOWS] -> (b) RETURN a, b;```
+* You can add additional labels to nodes
+	* ``` MATCH (m:Movie) SET m:Action```
+* Remove labels with REMOVE
+	* ``` REMOVE m:Action ```
+* You can use JSON syntax to set properties on a node
+	* ```SET x = {prop1: val1, prop2: val2}```
+	* ```SET x += {prop3: val3}```
+* Set individual properties
+	* ```SET x.name="kyle"```
+* "MERGE" Should be used carefully
+	* Can lead to duplicated data if not used correctly
+	* Both modifies and creates data depending on if the query identifies the node.
+* Use "ON CREATE " to modify new nodes while merging.
+* Use "ON MATCH " to modify already existing nodes.
+* When using merge to create relationships, you must first match the nodes to be related, otherwise the nodes are created.
